@@ -2,8 +2,8 @@ import pygame
 import math
 
 # pygame options
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 800
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 SCREEN_TITLE = 'car_driving'
 FPS = 60
@@ -40,10 +40,35 @@ def main():
     # main game loop
     done = False
     while not done:
+        # limit fps and get deltatime
+        deltatime = clock.tick(FPS)
+
         # poll input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            # fps and deltatime testing
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    FPS = 10
+                elif event.key == pygame.K_2:
+                    FPS = 20
+                elif event.key == pygame.K_3:
+                    FPS = 30
+                elif event.key == pygame.K_4:
+                    FPS = 40
+                elif event.key == pygame.K_5:
+                    FPS = 50
+                elif event.key == pygame.K_6:
+                    FPS = 60
+                elif event.key == pygame.K_7:
+                    FPS = 70
+                elif event.key == pygame.K_8:
+                    FPS = 80
+                elif event.key == pygame.K_9:
+                    FPS = 90
+                elif event.key == pygame.K_0:
+                    FPS = 1000
         keys_pressed = pygame.key.get_pressed()
         car.handle_keys(keys_pressed)
 
@@ -56,9 +81,6 @@ def main():
 
         # draw everything to screen
         pygame.display.flip()
-
-        # limit fps
-        clock.tick(FPS)
     
     # uninit all pygame modules
     pygame.quit()
@@ -118,6 +140,7 @@ class Car(pygame.sprite.Sprite):
         # turn right when pressing right
         if keys_pressed[pygame.K_RIGHT]:
             self.angle -= TURN_SPEED
+
 
 if __name__ == '__main__':
     main()
