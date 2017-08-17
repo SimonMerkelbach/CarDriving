@@ -22,6 +22,9 @@ TURN_SPEED = 4  # higher = faster turn = smaller turn radius
 
 
 def main():
+    # needed to be able to change fps ingame, otherwise scope doesnt allow it
+    global FPS
+
     # init all important pygame modules
     pygame.init()
 
