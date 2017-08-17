@@ -1,16 +1,24 @@
 import pygame
 import math
 
-
+# pygame options
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 SCREEN_TITLE = 'car_driving'
 FPS = 60
 
+# colors
 BLACK = (0, 0, 0)
 GRAY = (127, 127, 127)
 WHITE = (255, 255, 255)
+
+# car options
+MAX_SPEED = 10  # higher = greater max speed
+ACCELERATION = 1/10  # higher = greater acceleration
+DECELERATION = 1/10  # higher = greater deceleration
+BRAKE = 2/10  # higher = stronger brake
+TURN_SPEED = 4  # higher = faster turn = smaller turn radius
 
 
 def main():
@@ -32,6 +40,7 @@ def main():
     # main game loop
     done = False
     while not done:
+        # poll input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -59,16 +68,17 @@ class Car(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
 
+        # must keep original to copy from
         self._original_image = pygame.Surface((width, height))
         self._original_image.fill(GRAY)
         self._original_image.set_colorkey(BLACK)  # make background 'transparent' (same as background color)
-        
+        # copy original, this copy will be used for editing (e.g. rotating)
         self.image = self._original_image
-
+        # 
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
+        # no movement at creation
         self.angle = 0
         self.speed = 0
     
@@ -77,6 +87,7 @@ class Car(pygame.sprite.Sprite):
         self.move()
 
     def rotate(self):
+        # this allows rotation around the center instead of top left corner
         old_center = self.rect.center
         self.image = pygame.transform.rotate(self._original_image, self.angle)
         self.rect = self.image.get_rect(center=old_center)
@@ -91,22 +102,22 @@ class Car(pygame.sprite.Sprite):
     def handle_keys(self, keys_pressed):
         # accelerate when pressing up
         if keys_pressed[pygame.K_UP]:
-            if self.speed < 10:
-                self.speed += 0.1
+            if self.speed < MAX_SPEED:
+                self.speed += ACCELERATION
         # decelerate when not pressing up
         if not keys_pressed[pygame.K_UP]:
             if self.speed > 0:
-                self.speed -= 0.1
+                self.speed -= DECELERATION
         # brake when pressing down
         if keys_pressed[pygame.K_DOWN]:
             if self.speed > 0:
-                self.speed -= 0.2
+                self.speed -= BRAKE
         # turn left when pressing left
         if keys_pressed[pygame.K_LEFT]:
-            self.angle += 4
+            self.angle += TURN_SPEED
         # turn right when pressing right
         if keys_pressed[pygame.K_RIGHT]:
-            self.angle -= 4
+            self.angle -= TURN_SPEED
 
 if __name__ == '__main__':
     main()
